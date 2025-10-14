@@ -21,7 +21,7 @@ jobs:
         context: ./app
         file: ./app/Dockerfile
         push: true
-        tags: <your_dockerhub_username>/cloud-app:latest
+        tags: anand059/cloud-app:latest
 
     - name: Set up kubectl
       uses: azure/setup-kubectl@v3
