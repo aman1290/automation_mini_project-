@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./app
+        file: ./app/Dockerfile
+        push: true
+        tags: <your_dockerhub_username>/cloud-app:latest
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    - name: Deploy to Kubernetes
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+      run: |
+        echo "$KUBE_CONFIG_DATA" | base64 --decode > kubeconfig
+        kubectl --kubeconfig=kubeconfig apply -f k8s/deployment.yaml
+        kubectl --kubeconfig=kubeconfig apply -f k8s/service.yaml
+
+    # Optionally run Ansible scripts after deploy
+    - name: Run Ansible Playbook
+      run: |
+        ansible-playbook -i ansible/inventory ansible/site.yml
