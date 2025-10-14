@@ -29,19 +29,19 @@ jobs:
         push: true
         tags: anand059/cloud-app:latest
 
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v3
-      with:
-        version: 'latest'
+ #   - name: Set up kubectl
+  #    uses: azure/setup-kubectl@v3
+   #   with:
+    #    version: 'latest'
+#
+ 
+ #    env:
+    #    KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+     # run: |
+      #  echo "$KUBE_CONFIG_DATA" | base64 --decode > kubeconfig
+       # kubectl --kubeconfig=kubeconfig apply -f k8s/deployment.yaml
+        #kubectl --kubeconfig=kubeconfig apply -f k8s/service.yaml
 
-    - name: Deploy to Kubernetes
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-      run: |
-        echo "$KUBE_CONFIG_DATA" | base64 --decode > kubeconfig
-        kubectl --kubeconfig=kubeconfig apply -f k8s/deployment.yaml
-        kubectl --kubeconfig=kubeconfig apply -f k8s/service.yaml
-
-    - name: Run Ansible Playbook
-      run: |
-        ansible-playbook -i ansible/inventory ansible/site.yml
+    #- name: Run Ansible Playbook
+     # run: |
+      #  ansible-playbook -i ansible/inventory ansible/site.yml
